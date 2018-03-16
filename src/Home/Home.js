@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 class Home extends Component {
-  login() {
-    this.props.auth.login();
-  }
-  render() {
+  render(){
     const { isAuthenticated } = this.props.auth;
     return (
       <div className="container">
@@ -31,7 +28,11 @@ class Home extends Component {
         }
       </div>
     );
-  }
+  };
+
+  login(){
+    this.props.auth.login();
+  };
 }
 
 export default Home;

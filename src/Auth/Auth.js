@@ -12,10 +12,10 @@ export default class Auth {
     scope: 'openid'
   });
 
-  constructor() {
-                   this.login = this.login.bind(this);
-                  this.logout = this.logout.bind(this);
-         this.isAuthenticated = this.isAuthenticated.bind(this);
+  constructor(){
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.isAuthenticated = this.isAuthenticated.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
   };
 
@@ -25,14 +25,12 @@ export default class Auth {
 
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
-      console.log(authResult);
-      console.log(authResult.auth0UserId);
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         history.replace('/home');
       } else if (err) {
         history.replace('/home');
-        console.log(err);
+        console.error(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
