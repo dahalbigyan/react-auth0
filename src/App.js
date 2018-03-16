@@ -49,7 +49,7 @@ class App extends Component {
     );
   };
 
-  goTo(route) {
+  goTo(route){
     this.props.history.replace(`/${route}`)
   };
 

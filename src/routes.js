@@ -7,14 +7,11 @@ import Auth from './Auth/Auth';
 import history from './history';
 
 const auth = new Auth();
-console.log(Object.keys(auth));
-console.log(auth);
-
 const handleAuthentication = ({location}) => {
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
-  }
-}
+  };
+};
 
 export const makeMainRoutes = () => {
   return (
@@ -24,7 +21,7 @@ export const makeMainRoutes = () => {
           <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
-            return <Callback {...props} /> 
+            return <Callback {...props} />
           }}/>
         </div>
       </Router>
