@@ -23,6 +23,7 @@
     "react-router-dom": "^4.1.1"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "start:dev": "node server.js"
   }
 }
