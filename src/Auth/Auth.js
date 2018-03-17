@@ -5,6 +5,7 @@ import history from '../history';
 export default class Auth {
   userProfile;
   requestedScopes = 'openid profile read:messages write:messages';
+  tokenRenewalTimeout;
 
   auth0 = new auth0.WebAuth({
     domain: AUTH_CONFIG.domain,
@@ -23,6 +24,7 @@ export default class Auth {
     this.userHasScopes = this.userHasScopes.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
     this.getProfile = this.getProfile.bind(this);
+    this.scheduleRenewal();
   }
 
   login() {
@@ -57,6 +59,9 @@ export default class Auth {
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
     localStorage.setItem('scopes', JSON.stringify(scopes));
+
+    // schedule a token renewal
+    this.scheduleRenewal();
     // navigate to the home route
     history.replace('/home');
   }
@@ -86,6 +91,7 @@ export default class Auth {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('scopes');
     this.userProfile = null;
+    clearTimeout(this.tokenRenewalTimeout);
     // navigate to the home route
     history.replace('/home');
   }; 
@@ -102,4 +108,29 @@ export default class Auth {
     console.log(grantedScopes);
     return scopes.every(scope => grantedScopes.includes(scope));
   }; 
-}
+
+  renewToken() {
+    this.auth0.checkSession({},
+      (err, result) => {
+        if (err) {
+          alert(
+            `Could not get a new token (${err.error}: ${err.error_description}).`
+          );
+        } else {
+          this.setSession(result);
+          alert(`Successfully renewed auth!`);
+        }
+      }
+    );
+  };
+
+  scheduleRenewal() {
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    const delay = expiresAt - Date.now();
+    if (delay > 0) {
+      this.tokenRenewalTimeout = setTimeout(() => {
+        this.renewToken();
+      }, delay);
+    }
+  };
+};
