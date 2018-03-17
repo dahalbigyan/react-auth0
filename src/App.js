@@ -3,8 +3,8 @@ import { Navbar, Button } from 'react-bootstrap';
 import './App.css';
 
 class App extends Component {
-  render(){
-    const { isAuthenticated } = this.props.auth;
+  render() {
+    const { isAuthenticated, userHasScopes } = this.props.auth;
     return (
       <div>
         <Navbar fluid>
@@ -22,7 +22,6 @@ class App extends Component {
             {
               !isAuthenticated() && (
                   <Button
-                    id="qsLoginBtn"
                     bsStyle="primary"
                     className="btn-margin"
                     onClick={this.login.bind(this)}
@@ -34,7 +33,39 @@ class App extends Component {
             {
               isAuthenticated() && (
                   <Button
-                    id="qsLogoutBtn"
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.goTo.bind(this, 'profile')}
+                  >
+                    Profile
+                  </Button>
+                )
+            }
+            {
+              isAuthenticated() && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.goTo.bind(this, 'ping')}
+                  >
+                    Ping
+                  </Button>
+                )
+            }
+            {
+              isAuthenticated() &&  userHasScopes(['write:messages']) && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.goTo.bind(this, 'admin')}
+                  >
+                    Admin
+                  </Button>
+                )
+            }
+            {
+              isAuthenticated() && (
+                  <Button
                     bsStyle="primary"
                     className="btn-margin"
                     onClick={this.logout.bind(this)}
@@ -47,19 +78,17 @@ class App extends Component {
         </Navbar>
       </div>
     );
-  };
+  }; 
 
   goTo(route){
     this.props.history.replace(`/${route}`)
-  };
-
+  }; 
   login(){
     this.props.auth.login();
-  };
-
-  logout(){
+  }; 
+  logout() {
     this.props.auth.logout();
-  };
-}
+  }; 
+}; 
 
 export default App;
